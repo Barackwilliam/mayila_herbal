@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{% block title %}{{ site.site_name }}{% endblock %} — {{ site.tagline }}</title>
   <meta name="description" content="{{ site.meta_description }}">
   <meta name="keywords" content="{{ site.meta_keywords }}">
   <meta property="og:title" content="{{ site.site_name }}">
   <meta property="og:description" content="{{ site.meta_description }}">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- Uploadcare Widget -->
   <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
 
   <style>
-    /* ── CSS Variables from Admin ───────────────────────── */
+    /* ── CSS Variables from Admin ── */
     :root {
       --primary:    {{ site.primary_color }};
       --secondary:  {{ site.secondary_color }};
@@ -29,537 +24,545 @@
       --light:      {{ site.light_color }};
       --text:       {{ site.text_color }};
       --white:      #ffffff;
-      --shadow:     0 8px 40px rgba(0,0,0,.12);
+      --shadow-sm:  0 2px 12px rgba(0,0,0,.08);
+      --shadow-md:  0 8px 32px rgba(0,0,0,.12);
+      --shadow-lg:  0 16px 48px rgba(0,0,0,.16);
       --radius:     16px;
-      --transition: .35s cubic-bezier(.4,0,.2,1);
+      --radius-sm:  10px;
+      --transition: .3s cubic-bezier(.4,0,.2,1);
+      --navbar-h:   72px;
     }
 
-    /* ── Reset ─────────────────────────────────────────── */
+    /* ── Reset ── */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--light);
-      color: var(--text);
-      overflow-x: hidden;
+      font-family:'DM Sans', sans-serif;
+      background:var(--light);
+      color:var(--text);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
     }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; }
+    a { text-decoration:none; color:inherit; }
+    img { max-width:100%; display:block; }
+    button { cursor:pointer; font-family:inherit; }
+    ul { list-style:none; }
 
-    /* ── Announcement Bar ──────────────────────────────── */
+    /* ── Announcement Bar ── */
     .announcement-bar {
-      background: var(--primary);
-      color: #fff;
-      text-align: center;
-      padding: 10px 20px;
-      font-size: .85rem;
-      font-weight: 500;
-      letter-spacing: .3px;
-      position: relative;
-      z-index: 1001;
+      background:var(--primary);
+      color:#fff;
+      text-align:center;
+      padding:10px 20px;
+      font-size:.85rem;
+      font-weight:500;
+      letter-spacing:.3px;
+      position:relative;
+      z-index:1001;
     }
-    .announcement-bar a { color: var(--secondary); font-weight: 700; margin-left: 8px; }
+    .announcement-bar a {
+      color:var(--secondary);
+      font-weight:700;
+      margin-left:8px;
+      text-decoration:underline;
+    }
 
-    /* ── Navbar ────────────────────────────────────────── */
+    /* ── Navbar ── */
     .navbar {
-      position: sticky; top: 0; z-index: 1000;
-      background: rgba(255,255,255,.97);
-      backdrop-filter: blur(12px);
-      border-bottom: 2px solid var(--secondary);
-      padding: 0 5%;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 72px;
-      box-shadow: 0 2px 20px rgba(0,0,0,.08);
-      transition: var(--transition);
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.97);
+      backdrop-filter:blur(12px);
+      border-bottom:2px solid var(--secondary);
+      height:var(--navbar-h);
+      padding:0 5%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      box-shadow:var(--shadow-sm);
+      transition:height var(--transition), box-shadow var(--transition);
     }
     .navbar.scrolled {
-      height: 60px;
-      box-shadow: 0 4px 30px rgba(0,0,0,.15);
+      height:60px;
+      box-shadow:var(--shadow-md);
     }
-    .nav-logo {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .nav-logo img {
-      height: 48px; width: 48px; border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--secondary);
-      transition: var(--transition);
-    }
-    .navbar.scrolled .nav-logo img { height: 40px; width: 40px; }
-    .nav-logo-text {
-      display: flex; flex-direction: column;
-    }
-    .nav-logo-text .brand { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem; color: var(--primary); line-height: 1.1; }
-    .nav-logo-text .sub { font-size: .7rem; color: var(--secondary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
 
-    /* ── Desktop Nav Links ───────────────────────────────── */
+    /* Logo */
+    .nav-logo {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-shrink:0;
+    }
+    .nav-logo-img {
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid var(--secondary);
+      transition:transform var(--transition);
+    }
+    .nav-logo:hover .nav-logo-img { transform:scale(1.05); }
+    .navbar.scrolled .nav-logo-img { width:40px; height:40px; }
+    .nav-logo-placeholder {
+      width:48px; height:48px;
+      border-radius:50%;
+      background:var(--primary);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .nav-logo-placeholder i { color:#fff; font-size:1.4rem; }
+    .nav-logo-text { display:flex; flex-direction:column; line-height:1.2; }
+    .nav-logo-text .brand {
+      font-family:'Playfair Display', serif;
+      font-weight:700;
+      font-size:1rem;
+      color:var(--primary);
+    }
+    .nav-logo-text .sub {
+      font-size:.7rem;
+      color:var(--secondary);
+      font-weight:600;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      margin-top:2px;
+    }
+
+    /* Desktop nav links */
     .nav-links {
-      display: flex; align-items: center; gap: 8px; list-style: none;
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
     .nav-links a {
-      padding: 8px 16px; border-radius: 30px; font-weight: 500;
-      font-size: .9rem; color: var(--text);
-      transition: var(--transition);
-      position: relative;
+      padding:8px 16px;
+      border-radius:30px;
+      font-weight:500;
+      font-size:.9rem;
+      color:var(--text);
+      transition:background var(--transition), color var(--transition);
     }
-    .nav-links a:hover, .nav-links a.active {
-      background: var(--primary); color: #fff;
+    .nav-links a:hover,
+    .nav-links a.active {
+      background:var(--primary);
+      color:#fff;
     }
-    .nav-cta {
-      background: var(--secondary) !important;
-      color: var(--dark) !important;
-      font-weight: 700 !important;
-      padding: 10px 22px !important;
+    .nav-links .nav-cta {
+      background:var(--secondary);
+      color:var(--dark);
+      font-weight:700;
+      padding:10px 22px;
     }
-    .nav-cta:hover {
-      background: var(--primary) !important;
-      color: #fff !important;
-      transform: translateY(-1px);
+    .nav-links .nav-cta:hover {
+      background:var(--primary);
+      color:#fff;
     }
 
-    /* ============ SIDEBAR / HAMBURGER MENU (FANTASTIC VERSION) ============ */
+    /* ── Hamburger Button ── */
     .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 12px;
-      z-index: 1002;
-      position: relative;
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      display:none;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:5px;
+      width:44px;
+      height:44px;
+      background:none;
+      border:1.5px solid rgba(0,0,0,.1);
+      border-radius:var(--radius-sm);
+      padding:0;
+      flex-shrink:0;
+      transition:all var(--transition);
+      z-index:1002;
     }
-    .hamburger:hover {
-      background: rgba(0,0,0,0.05);
-    }
+    .hamburger:hover { background:rgba(0,0,0,.04); border-color:var(--secondary); }
     .hamburger span {
-      width: 26px;
-      height: 2px;
-      background: var(--primary);
-      display: block;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      border-radius: 4px;
+      display:block;
+      width:22px;
+      height:2px;
+      background:var(--primary);
+      border-radius:2px;
+      transition:transform .35s cubic-bezier(0.68,-0.55,0.265,1.55), opacity .25s ease, width .25s ease;
     }
     .hamburger.open span:nth-child(1) {
-      transform: rotate(45deg) translate(5px,5px);
-      background: var(--secondary);
+      transform:translateY(7px) rotate(45deg);
+      background:var(--secondary);
     }
     .hamburger.open span:nth-child(2) {
-      opacity: 0;
-      transform: translateX(-10px);
+      opacity:0;
+      width:0;
     }
     .hamburger.open span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px,-5px);
-      background: var(--secondary);
+      transform:translateY(-7px) rotate(-45deg);
+      background:var(--secondary);
     }
 
-    /* Overlay - Dark background when sidebar is open */
+    /* ── Sidebar Overlay ── */
     .sidebar-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 998;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(8px);
+      z-index:1098;
+      opacity:0;
+      visibility:hidden;
+      transition:opacity 0.35s ease, visibility 0s 0.35s;
     }
     .sidebar-overlay.active {
-      opacity: 1;
-      visibility: visible;
+      opacity:1;
+      visibility:visible;
+      transition:opacity 0.35s ease, visibility 0s 0s;
     }
 
-    /* Mobile Sidebar (Fantastic Design) */
-    @media (max-width: 900px) {
-      .hamburger {
-        display: flex;
-      }
-
-      .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 85vw;
-        max-width: 380px;
-        height: 100vh;
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        flex-direction: column;
-        padding: 100px 24px 40px;
-        box-shadow: -20px 0 60px rgba(0,0,0,0.2);
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
-        align-items: stretch;
-        gap: 8px;
-        overflow-y: auto;
-        border-left: 3px solid var(--secondary);
-      }
-
-      .nav-links.open {
-        right: 0;
-      }
-
-      /* Sidebar Header with User Info/Logo */
-      .nav-links::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 120px;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        opacity: 0.08;
-        pointer-events: none;
-      }
-
-      /* Close button inside sidebar (X mark) */
-      .sidebar-close {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        background: var(--primary);
-        border: none;
-        border-radius: 50%;
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      }
-      .sidebar-close:hover {
-        transform: rotate(90deg);
-        background: var(--secondary);
-      }
-
-      /* Sidebar Brand Section */
-      .sidebar-brand {
-        text-align: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 2px solid rgba(0,0,0,0.08);
-      }
-      .sidebar-brand img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid var(--secondary);
-        margin-bottom: 12px;
-      }
-      .sidebar-brand h3 {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.2rem;
-        color: var(--primary);
-        margin-bottom: 4px;
-      }
-      .sidebar-brand p {
-        font-size: 0.7rem;
-        color: var(--secondary);
-        letter-spacing: 1px;
-      }
-
-      /* Sidebar Navigation Items */
-      .nav-links a {
-        width: 100%;
-        padding: 14px 20px;
-        border-radius: 12px;
-        font-size: 1.05rem;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .nav-links a i {
-        width: 24px;
-        font-size: 1.2rem;
-        color: var(--secondary);
-        transition: all 0.3s ease;
-      }
-
-      .nav-links a:hover {
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: white;
-        transform: translateX(8px);
-      }
-
-      .nav-links a:hover i {
-        color: white;
-        transform: scale(1.1);
-      }
-
-      .nav-links a::before {
-        content: '';
-        position: absolute;
-        left: -100%;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s ease;
-      }
-
-      .nav-links a:hover::before {
-        left: 100%;
-      }
-
-      /* Active link styling */
-      .nav-links a.active {
-        background: var(--primary);
-        color: white;
-      }
-      .nav-links a.active i {
-        color: white;
-      }
-
-      /* WhatsApp CTA inside sidebar */
-      .nav-cta-sidebar {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(0,0,0,0.08);
-      }
-      .nav-cta-sidebar a {
-        background: #25D366 !important;
-        color: white !important;
-        justify-content: center;
-      }
-      .nav-cta-sidebar a i {
-        color: white !important;
-      }
-      .nav-cta-sidebar a:hover {
-        background: #128C7E !important;
-        transform: translateX(0) !important;
-      }
-
-      /* Sidebar footer */
-      .sidebar-footer {
-        margin-top: auto;
-        padding-top: 20px;
-        text-align: center;
-        font-size: 0.7rem;
-        color: #888;
-      }
+    /* ── Mobile Sidebar - MODERN & SMOOTH ── */
+    .nav-sidebar {
+      position:fixed;
+      top:0;
+      right:0;
+      width:85vw;
+      max-width:400px;
+      height:100%;
+      height:100dvh;
+      background:linear-gradient(145deg, #ffffff 0%, #faf8f5 100%);
+      flex-direction:column;
+      box-shadow:-25px 0 70px rgba(0,0,0,0.25);
+      z-index:1099;
+      border-left:none;
+      display:flex;
+      transform:translateX(100%);
+      transition:transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      visibility:visible;
+      overflow:hidden;
+    }
+    .nav-sidebar.open {
+      transform:translateX(0);
+      visibility:visible;
     }
 
-    /* ── Buttons ─────────────────────────────────────────── */
+    /* Sidebar header - premium design */
+    .sidebar-header {
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:28px 24px 24px;
+      background:linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, var(--secondary)) 100%);
+      flex-shrink:0;
+    }
+    .sidebar-header::after {
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:24px;
+      width:60px;
+      height:3px;
+      background:var(--secondary);
+      border-radius:3px;
+    }
+    .sidebar-header img,
+    .sidebar-header-icon {
+      width:60px;
+      height:60px;
+      border-radius:32px;
+      object-fit:cover;
+      border:2.5px solid rgba(255,255,255,0.4);
+      flex-shrink:0;
+    }
+    .sidebar-header-icon {
+      background:rgba(255,255,255,0.15);
+      backdrop-filter:blur(4px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .sidebar-header-icon i { color:var(--secondary); font-size:1.7rem; }
+    .sidebar-header-text { flex:1; min-width:0; }
+    .sidebar-header-text h3 {
+      font-family:'Playfair Display', serif;
+      font-size:1.15rem;
+      color:#fff;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin-bottom:4px;
+      font-weight:700;
+    }
+    .sidebar-header-text p {
+      font-size:0.7rem;
+      color:rgba(255,255,255,0.85);
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+    .sidebar-close {
+      width:40px;
+      height:40px;
+      background:rgba(255,255,255,0.15);
+      border:none;
+      border-radius:30px;
+      color:#fff;
+      font-size:1rem;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-close:hover {
+      background:rgba(255,255,255,0.3);
+      transform:rotate(90deg) scale(1.05);
+    }
+
+    /* Sidebar nav items - modern rounded design */
+    .sidebar-nav {
+      flex:1;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior:contain;
+      padding:24px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .sidebar-nav a {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:14px 20px;
+      border-radius:60px;
+      font-size:1rem;
+      font-weight:500;
+      color:var(--text);
+      transition:all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      position:relative;
+    }
+    .sidebar-nav a i {
+      width:24px;
+      text-align:center;
+      font-size:1.15rem;
+      color:var(--primary);
+      transition:all 0.25s ease;
+      flex-shrink:0;
+    }
+    .sidebar-nav a:hover {
+      background:rgba(15, 59, 44, 0.08);
+      transform:translateX(8px);
+      color:var(--primary);
+    }
+    .sidebar-nav a:hover i {
+      color:var(--secondary);
+      transform:scale(1.1);
+    }
+    .sidebar-nav a.active {
+      background:var(--primary);
+      color:#fff;
+    }
+    .sidebar-nav a.active i {
+      color:var(--secondary);
+    }
+
+    /* WhatsApp CTA inside sidebar - enhanced */
+    .sidebar-wa {
+      padding:16px 20px 20px;
+      border-top:1px solid rgba(0,0,0,0.06);
+      flex-shrink:0;
+    }
+    .sidebar-wa a {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:14px;
+      background:#25D366;
+      color:#fff;
+      font-weight:700;
+      font-size:0.9rem;
+      border-radius:60px;
+      transition:all 0.3s ease;
+      box-shadow:0 4px 12px rgba(37,211,102,0.3);
+    }
+    .sidebar-wa a:hover {
+      background:#128C7E;
+      transform:translateY(-2px);
+      gap:16px;
+      box-shadow:0 6px 18px rgba(37,211,102,0.4);
+    }
+    .sidebar-wa a i { font-size:1.2rem; }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      padding:16px 20px 28px;
+      text-align:center;
+      font-size:0.7rem;
+      color:#aaa;
+      flex-shrink:0;
+      border-top:1px solid rgba(0,0,0,0.04);
+    }
+
+    /* ── Buttons ── */
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 32px; border-radius: 50px; font-weight: 600;
-      font-size: .95rem; cursor: pointer; border: none;
-      transition: var(--transition); letter-spacing: .3px;
-      text-decoration: none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:14px 32px;
+      border-radius:50px;
+      font-weight:600;
+      font-size:.95rem;
+      cursor:pointer;
+      border:none;
+      transition:var(--transition);
+      letter-spacing:.3px;
+      text-decoration:none;
     }
-    .btn-primary {
-      background: var(--primary); color: #fff;
-      box-shadow: 0 4px 20px rgba(26,92,46,.35);
-    }
-    .btn-primary:hover {
-      background: var(--dark); transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(26,92,46,.45);
-    }
-    .btn-gold {
-      background: var(--secondary); color: var(--dark);
-      box-shadow: 0 4px 20px rgba(201,168,76,.35);
-    }
-    .btn-gold:hover {
-      background: #b8963e; transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(201,168,76,.45);
-    }
-    .btn-outline {
-      background: transparent; color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-    .btn-outline:hover { background: var(--primary); color: #fff; }
-    .btn-whatsapp {
-      background: #25D366; color: #fff;
-      box-shadow: 0 4px 20px rgba(37,211,102,.4);
-    }
-    .btn-whatsapp:hover {
-      background: #128C7E; transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(37,211,102,.5);
-    }
+    .btn-primary { background:var(--primary); color:#fff; box-shadow:0 4px 20px rgba(26,92,46,.35); }
+    .btn-primary:hover { background:var(--dark); transform:translateY(-2px); box-shadow:0 8px 30px rgba(26,92,46,.45); }
+    .btn-gold { background:var(--secondary); color:var(--dark); box-shadow:0 4px 20px rgba(201,168,76,.35); }
+    .btn-gold:hover { background:#b8963e; transform:translateY(-2px); }
+    .btn-outline { background:transparent; color:var(--primary); border:2px solid var(--primary); }
+    .btn-outline:hover { background:var(--primary); color:#fff; }
+    .btn-whatsapp { background:#25D366; color:#fff; box-shadow:0 4px 20px rgba(37,211,102,.4); }
+    .btn-whatsapp:hover { background:#128C7E; transform:translateY(-2px); }
 
-    /* ── Section Header ──────────────────────────────────── */
-    .section-header {
-      text-align: center; margin-bottom: 60px;
-    }
+    /* ── Section Header ── */
+    .section-header { text-align:center; margin-bottom:60px; }
     .section-label {
-      font-size: .8rem; font-weight: 700; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--secondary);
-      display: block; margin-bottom: 12px;
+      font-size:.8rem; font-weight:700; letter-spacing:3px;
+      text-transform:uppercase; color:var(--secondary);
+      display:block; margin-bottom:12px;
     }
     .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700; color: var(--dark);
-      line-height: 1.2; margin-bottom: 16px;
+      font-family:'Playfair Display', serif;
+      font-size:clamp(2rem, 4vw, 3rem);
+      font-weight:700; color:var(--dark);
+      line-height:1.2; margin-bottom:16px;
     }
     .section-subtitle {
-      font-size: 1.05rem; color: #666; max-width: 600px; margin: 0 auto;
-      line-height: 1.7;
+      font-size:1.05rem; color:#666; max-width:600px; margin:0 auto;
+      line-height:1.7;
     }
     .section-divider {
-      width: 60px; height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 2px; margin: 20px auto 0;
+      width:60px; height:4px;
+      background:linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius:2px; margin:20px auto 0;
     }
 
-    /* ── Cards ───────────────────────────────────────────── */
+    /* ── Cards ── */
     .card {
-      background: #fff; border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0,0,0,.07);
-      transition: var(--transition);
+      background:#fff;
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow:0 4px 24px rgba(0,0,0,.07);
+      transition:var(--transition);
     }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 48px rgba(0,0,0,.13);
-    }
+    .card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,.13); }
 
-    /* ── WhatsApp Float Button ───────────────────────────── */
+    /* ── WhatsApp Float Button ── */
     .whatsapp-float {
-      position: fixed; bottom: 28px; right: 28px; z-index: 999;
-      background: #25D366; color: #fff;
-      width: 60px; height: 60px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.7rem;
-      box-shadow: 0 6px 30px rgba(37,211,102,.5);
-      animation: pulse-wa 2.5s infinite;
-      transition: var(--transition);
+      position:fixed;
+      bottom:28px;
+      right:28px;
+      z-index:999;
+      background:#25D366;
+      color:#fff;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.7rem;
+      box-shadow:0 6px 30px rgba(37,211,102,.5);
+      animation:pulse-wa 2.5s infinite;
+      transition:var(--transition);
     }
-    .whatsapp-float:hover {
-      transform: scale(1.15);
-      background: #128C7E;
-    }
+    .whatsapp-float:hover { transform:scale(1.15); background:#128C7E; }
     @keyframes pulse-wa {
-      0%,100% { box-shadow: 0 6px 30px rgba(37,211,102,.5); }
-      50% { box-shadow: 0 6px 50px rgba(37,211,102,.8); }
+      0%,100% { box-shadow:0 6px 30px rgba(37,211,102,.5); }
+      50%      { box-shadow:0 6px 50px rgba(37,211,102,.8); }
     }
 
-    /* ── Footer ──────────────────────────────────────────── */
+    /* ── Footer ── */
     footer {
-      background: var(--dark);
-      color: rgba(255,255,255,.8);
-      padding: 60px 5% 30px;
+      background:var(--dark);
+      color:rgba(255,255,255,.8);
+      padding:60px 5% 30px;
     }
     .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1.5fr;
-      gap: 40px; margin-bottom: 40px;
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1.5fr;
+      gap:40px;
+      margin-bottom:40px;
     }
     .footer-brand img {
-      height: 70px; width: 70px; border-radius: 50%;
-      object-fit: cover; border: 3px solid var(--secondary);
-      margin-bottom: 16px;
+      height:70px; width:70px; border-radius:50%;
+      object-fit:cover; border:3px solid var(--secondary); margin-bottom:16px;
     }
-    .footer-brand h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem; color: #fff; margin-bottom: 8px;
-    }
-    .footer-brand p { font-size: .9rem; line-height: 1.7; }
+    .footer-brand h3 { font-family:'Playfair Display', serif; font-size:1.2rem; color:#fff; margin-bottom:8px; }
+    .footer-brand p  { font-size:.9rem; line-height:1.7; }
     .footer-col h4 {
-      font-family: 'Oswald', sans-serif;
-      color: var(--secondary); font-size: 1rem; letter-spacing: 1px;
-      text-transform: uppercase; margin-bottom: 20px;
+      font-family:'Oswald', sans-serif;
+      color:var(--secondary);
+      font-size:1rem;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      margin-bottom:20px;
     }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; }
-    .footer-col ul a { color: rgba(255,255,255,.7); transition: color .2s; font-size: .9rem; }
-    .footer-col ul a:hover { color: var(--secondary); }
-    .footer-socials { display: flex; gap: 12px; margin-top: 16px; }
+    .footer-col ul li { margin-bottom:10px; }
+    .footer-col ul a { color:rgba(255,255,255,.7); transition:color .2s; font-size:.9rem; }
+    .footer-col ul a:hover { color:var(--secondary); }
+    .footer-socials { display:flex; gap:12px; margin-top:16px; }
     .footer-socials a {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,.1);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: .95rem; transition: var(--transition);
+      width:38px; height:38px; border-radius:50%;
+      background:rgba(255,255,255,.1);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:.95rem;
+      transition:var(--transition);
     }
-    .footer-socials a:hover { background: var(--secondary); color: var(--dark); transform: translateY(-3px); }
+    .footer-socials a:hover { background:var(--secondary); color:var(--dark); transform:translateY(-3px); }
     .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,.1);
-      padding-top: 24px; text-align: center;
-      font-size: .85rem; color: rgba(255,255,255,.5);
+      border-top:1px solid rgba(255,255,255,.1);
+      padding-top:24px;
+      text-align:center;
+      font-size:.85rem;
+      color:rgba(255,255,255,.5);
     }
-    .footer-tagline { color: var(--secondary); font-style: italic; margin-top: 6px; }
-
-    @media (max-width: 900px) {
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-tagline { color:var(--secondary); font-style:italic; margin-top:6px; }
+    .developer-credit {
+      margin-top:24px; padding-top:20px;
+      font-size:0.8rem; color:rgba(255,255,255,0.5);
+      text-align:center; border-top:1px solid rgba(255,255,255,0.08);
     }
-    @media (max-width: 600px) {
-      .footer-grid { grid-template-columns: 1fr; }
+    .jamiitek-link {
+      color:var(--secondary); text-decoration:none;
+      font-weight:700; transition:all 0.3s ease;
+      display:inline-block;
+    }
+    .jamiitek-link:hover { color:#ffffff; transform:translateY(-2px); }
+    .fa-heart { animation:heartbeat 1.5s ease infinite; margin:0 2px; }
+    @keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+
+    /* ── Scroll animations ── */
+    .fade-up { opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width:1024px) {
+      .footer-grid { grid-template-columns:1fr 1fr; gap:30px; }
     }
 
-    /* ── Scroll animations ───────────────────────────────── */
-    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
-    /* ── Developer Credit ──────────────────────────────────── */
-.developer-credit {
-  margin-top: 24px;
-  padding-top: 20px;
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.5);
-  text-align: center;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  font-family: 'DM Sans', sans-serif;
-}
+    @media (max-width:900px) {
+      .hamburger { display:flex; }
+      .nav-links { display:none; }
+    }
 
-.jamiitek-link {
-  color: var(--secondary);
-  text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  display: inline-block;
-  position: relative;
-  letter-spacing: 0.5px;
-}
+    @media (max-width:600px) {
+      .navbar { padding:0 4%; }
+      .nav-logo-text .sub { display:none; }
+      .footer-grid { grid-template-columns:1fr; }
+      .whatsapp-float { bottom:20px; right:16px; width:52px; height:52px; font-size:1.5rem; }
+    }
 
-.jamiitek-link:hover {
-  color: #ffffff;
-  transform: translateY(-2px);
-  text-shadow: 0 0 8px rgba(201,168,76,0.6);
-}
-
-.jamiitek-link::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--secondary), #fff);
-  transition: width 0.3s ease;
-}
-
-.jamiitek-link:hover::after {
-  width: 100%;
-}
-
-/* Heart beat animation */
-.fa-heart {
-  animation: heartbeat 1.5s ease infinite;
-  margin: 0 2px;
-}
-
-@keyframes heartbeat {
-  0%, 100% { 
-    transform: scale(1); 
-  }
-  50% { 
-    transform: scale(1.2); 
-  }
-}
     {% block extra_css %}{% endblock %}
   </style>
 </head>
@@ -577,11 +580,9 @@
   <nav class="navbar" id="navbar">
     <a href="/" class="nav-logo">
       {% if site.logo %}
-        <img src="{{ site.logo }}" alt="{{ site.site_name }} Logo">
+        <img src="{{ site.logo }}" alt="{{ site.site_name }} Logo" class="nav-logo-img">
       {% else %}
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;">
-          <i class="fas fa-leaf" style="color:#fff;font-size:1.4rem;"></i>
-        </div>
+        <div class="nav-logo-placeholder"><i class="fas fa-leaf"></i></div>
       {% endif %}
       <div class="nav-logo-text">
         <span class="brand">{{ site.site_name }}</span>
@@ -589,61 +590,77 @@
       </div>
     </a>
 
-    <button class="hamburger" id="hamburger" aria-label="Menu">
+    <!-- Desktop nav -->
+    <ul class="nav-links">
+      <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+      <li><a href="/products/" class="{% if '/products/' in request.path %}active{% endif %}">Products</a></li>
+      <li><a href="/#about">About Us</a></li>
+      <li><a href="/#contact">Contact</a></li>
+      <li>
+        <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ site.whatsapp_message|urlencode }}"
+           target="_blank" class="nav-cta">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+      </li>
+    </ul>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navSidebar">
       <span></span><span></span><span></span>
     </button>
+  </nav>
 
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <!-- Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Mobile Sidebar / Desktop Navigation -->
-    <ul class="nav-links" id="navLinks">
-      <!-- Close button for mobile sidebar -->
-      <button class="sidebar-close" id="sidebarClose" aria-label="Close Menu">
-        <i class="fas fa-times"></i>
-      </button>
+  <!-- Mobile Sidebar -->
+  <div class="nav-sidebar" id="navSidebar" role="dialog" aria-modal="true" aria-label="Navigation menu">
 
-      <!-- Sidebar Brand Section (visible only on mobile) -->
-      <div class="sidebar-brand mobile-only">
-        {% if site.logo %}
-          <img src="{{ site.logo }}" alt="{{ site.site_name }}">
-        {% else %}
-          <div style="width:70px;height:70px;border-radius:50%;background:var(--primary);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;">
-            <i class="fas fa-leaf" style="color:#fff;font-size:2rem;"></i>
-          </div>
-        {% endif %}
+    <!-- Header -->
+    <div class="sidebar-header">
+      {% if site.logo %}
+        <img src="{{ site.logo }}" alt="{{ site.site_name }}">
+      {% else %}
+        <div class="sidebar-header-icon"><i class="fas fa-leaf"></i></div>
+      {% endif %}
+      <div class="sidebar-header-text">
         <h3>{{ site.site_name }}</h3>
         <p>{{ site.tagline }}</p>
       </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
 
-      <!-- Navigation Items with Icons -->
-      <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">
+    <!-- Nav links -->
+    <nav class="sidebar-nav">
+      <a href="/" class="{% if request.path == '/' %}active{% endif %}">
         <i class="fas fa-home"></i> Home
-      </a></li>
-      <li><a href="/products/" class="{% if '/products/' in request.path %}active{% endif %}">
+      </a>
+      <a href="/products/" class="{% if '/products/' in request.path %}active{% endif %}">
         <i class="fas fa-flask"></i> Products
-      </a></li>
-      <li><a href="/#about">
+      </a>
+      <a href="/#about">
         <i class="fas fa-info-circle"></i> About Us
-      </a></li>
-      <li><a href="/#contact">
+      </a>
+      <a href="/#contact">
         <i class="fas fa-envelope"></i> Contact
-      </a></li>
+      </a>
+    </nav>
 
-      <!-- WhatsApp CTA inside sidebar -->
-      <li class="nav-cta-sidebar">
-        <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ site.whatsapp_message|urlencode }}" target="_blank">
-          <i class="fab fa-whatsapp"></i> Chat on WhatsApp
-        </a>
-      </li>
+    <!-- WhatsApp CTA -->
+    <div class="sidebar-wa">
+      <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ site.whatsapp_message|urlencode }}"
+         target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+      </a>
+    </div>
 
-      <!-- Sidebar Footer -->
-      <div class="sidebar-footer mobile-only">
-        <i class="fas fa-leaf"></i> Natural Healing<br>
-        <small>Reg. No: {{ site.registration_no }}</small>
-      </div>
-    </ul>
-  </nav>
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <i class="fas fa-leaf"></i> Natural Healing &bull; Reg. No: {{ site.registration_no }}
+    </div>
+  </div>
 
   <!-- Page Content -->
   {% block content %}{% endblock %}
@@ -657,141 +674,129 @@
 
   <!-- Footer -->
   <footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      {% if site.logo %}
-        <img src="{{ site.logo }}" alt="{{ site.site_name }}">
-      {% endif %}
-      <h3>{{ site.site_name }}</h3>
-      <p>{{ site.tagline }}</p>
-      <p style="margin-top:10px;font-size:.85rem;">Reg. No: {{ site.registration_no }}</p>
-      <div class="footer-socials">
-        {% if site.facebook_url %}<a href="{{ site.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
-        {% if site.instagram_url %}<a href="{{ site.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
-        {% if site.tiktok_url %}<a href="{{ site.tiktok_url }}" target="_blank"><i class="fab fa-tiktok"></i></a>{% endif %}
-        {% if site.youtube_url %}<a href="{{ site.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
-        {% if site.twitter_url %}<a href="{{ site.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+    <div class="footer-grid">
+      <div class="footer-brand">
+        {% if site.logo %}
+          <img src="{{ site.logo }}" alt="{{ site.site_name }}">
+        {% endif %}
+        <h3>{{ site.site_name }}</h3>
+        <p>{{ site.tagline }}</p>
+        <p style="margin-top:10px;font-size:.85rem;">Reg. No: {{ site.registration_no }}</p>
+        <div class="footer-socials">
+          {% if site.facebook_url %}<a href="{{ site.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+          {% if site.instagram_url %}<a href="{{ site.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+          {% if site.tiktok_url %}<a href="{{ site.tiktok_url }}" target="_blank"><i class="fab fa-tiktok"></i></a>{% endif %}
+          {% if site.youtube_url %}<a href="{{ site.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+          {% if site.twitter_url %}<a href="{{ site.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/products/">Products</a></li>
+          <li><a href="/videos/">Videos</a></li>
+          <li><a href="/#about">About Us</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/products/?category=wanaume">Men's Health</a></li>
+          <li><a href="/products/?category=wanawake">Women's Health</a></li>
+          <li><a href="/products/?category=sukari">Diabetes</a></li>
+          <li><a href="/products/?category=uti">UTI & Kidney</a></li>
+          <li><a href="/products/">All Products</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul>
+          <li><a href="tel:{{ site.phone1 }}"><i class="fas fa-phone" style="color:var(--secondary);margin-right:8px;"></i>{{ site.phone1 }}</a></li>
+          {% if site.phone2 %}<li><a href="tel:{{ site.phone2 }}"><i class="fas fa-phone" style="color:var(--secondary);margin-right:8px;"></i>{{ site.phone2 }}</a></li>{% endif %}
+          {% if site.email %}<li><a href="mailto:{{ site.email }}"><i class="fas fa-envelope" style="color:var(--secondary);margin-right:8px;"></i>{{ site.email }}</a></li>{% endif %}
+          <li><i class="fas fa-map-marker-alt" style="color:var(--secondary);margin-right:8px;"></i>{{ site.location }}</li>
+        </ul>
+        <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ site.whatsapp_message|urlencode }}"
+           target="_blank" class="btn btn-whatsapp" style="margin-top:16px;padding:10px 20px;font-size:.85rem;">
+          <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+        </a>
       </div>
     </div>
 
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="/"><i class="fas fa-chevron-right" style="font-size:.7rem;color:var(--secondary);margin-right:6px;"></i>Home</a></li>
-        <li><a href="/products/"><i class="fas fa-chevron-right" style="font-size:.7rem;color:var(--secondary);margin-right:6px;"></i>Products</a></li>
-        <li><a href="/videos/"><i class="fas fa-chevron-right" style="font-size:.7rem;color:var(--secondary);margin-right:6px;"></i>Videos</a></li>
-        <li><a href="/#about"><i class="fas fa-chevron-right" style="font-size:.7rem;color:var(--secondary);margin-right:6px;"></i>About Us</a></li>
-        <li><a href="/#contact"><i class="fas fa-chevron-right" style="font-size:.7rem;color:var(--secondary);margin-right:6px;"></i>Contact</a></li>
-      </ul>
+    <div class="footer-bottom">
+      <p>{{ site.footer_text }}</p>
+      <p class="footer-tagline">{{ site.footer_tagline }}</p>
+      <div class="developer-credit">
+        Developed with <i class="fas fa-heart"></i> by
+        <a href="https://www.jamiitek.com" target="_blank" rel="noopener noreferrer" class="jamiitek-link">
+          <strong>Jamiitek</strong>
+        </a>
+      </div>
     </div>
-
-    <div class="footer-col">
-      <h4>Products</h4>
-      <ul>
-        <li><a href="/products/?category=wanaume">Men's Health</a></li>
-        <li><a href="/products/?category=wanawake">Women's Health</a></li>
-        <li><a href="/products/?category=sukari">Diabetes</a></li>
-        <li><a href="/products/?category=uti">UTI & Kidney</a></li>
-        <li><a href="/products/">All Products</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Contact Us</h4>
-      <ul>
-        <li><a href="tel:{{ site.phone1 }}"><i class="fas fa-phone" style="color:var(--secondary);margin-right:8px;"></i>{{ site.phone1 }}</a></li>
-        {% if site.phone2 %}<li><a href="tel:{{ site.phone2 }}"><i class="fas fa-phone" style="color:var(--secondary);margin-right:8px;"></i>{{ site.phone2 }}</a></li>{% endif %}
-        {% if site.email %}<li><a href="mailto:{{ site.email }}"><i class="fas fa-envelope" style="color:var(--secondary);margin-right:8px;"></i>{{ site.email }}</a></li>{% endif %}
-        <li><i class="fas fa-map-marker-alt" style="color:var(--secondary);margin-right:8px;"></i>{{ site.location }}</li>
-      </ul>
-      <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ site.whatsapp_message|urlencode }}"
-         target="_blank" class="btn btn-whatsapp" style="margin-top:16px;padding:10px 20px;font-size:.85rem;">
-        <i class="fab fa-whatsapp"></i> Chat on WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>{{ site.footer_text }}</p>
-    <p class="footer-tagline">{{ site.footer_tagline }}</p>
-    
-    <!-- Developed by Jamiitek - Clickable Link -->
-    <div class="developer-credit">
-      Developed with <i class="fas fa-heart"></i> by 
-      <a href="https://www.jamiitek.com" target="_blank" rel="noopener noreferrer" class="jamiitek-link">
-        <strong>Jamiitek</strong>
-      </a>
-    </div>
-  </div>
-</footer>
+  </footer>
 
   <script>
-    // Navbar scroll effect
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    });
+    (function() {
+      'use strict';
 
-    // Mobile Sidebar Elements
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const sidebarClose = document.getElementById('sidebarClose');
+      // Navbar scroll
+      var navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', function() {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
 
-    // Function to open sidebar
-    function openSidebar() {
-      hamburger.classList.add('open');
-      navLinks.classList.add('open');
-      sidebarOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent body scroll when sidebar is open
-    }
+      // Sidebar elements
+      var hamburger = document.getElementById('hamburger');
+      var sidebar   = document.getElementById('navSidebar');
+      var overlay   = document.getElementById('sidebarOverlay');
+      var closeBtn  = document.getElementById('sidebarClose');
 
-    // Function to close sidebar
-    function closeSidebar() {
-      hamburger.classList.remove('open');
-      navLinks.classList.remove('open');
-      sidebarOverlay.classList.remove('active');
-      document.body.style.overflow = ''; // Restore body scroll
-    }
-
-    // Event listeners
-    hamburger.addEventListener('click', openSidebar);
-    sidebarClose.addEventListener('click', closeSidebar);
-    sidebarOverlay.addEventListener('click', closeSidebar);
-
-    // Close sidebar when a link is clicked
-    navLinks.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-
-    // Close sidebar on ESC key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-        closeSidebar();
+      function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+        hamburger.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
       }
-    });
 
-    // Scroll fade-up animation
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { 
-        if (e.isIntersecting) e.target.classList.add('visible'); 
-      });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-    // Add mobile-only class detection
-    function checkMobile() {
-      const mobileElements = document.querySelectorAll('.mobile-only');
-      if (window.innerWidth <= 900) {
-        mobileElements.forEach(el => el.style.display = 'block');
-      } else {
-        mobileElements.forEach(el => el.style.display = 'none');
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
       }
-    }
-    window.addEventListener('resize', checkMobile);
-    checkMobile();
+
+      hamburger.addEventListener('click', function() {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+      });
+      closeBtn.addEventListener('click', closeSidebar);
+      overlay.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+      });
+      sidebar.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', closeSidebar);
+      });
+
+      // Fade-up animations
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.fade-up').forEach(function(el) { io.observe(el); });
+
+    })();
   </script>
 
   {% block extra_js %}{% endblock %}
