@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: mayila_herbal
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "mayila_herbal.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mayila_herbal-db
+          property: connectionString
+
+databases:
+  - name: mayila_herbal-db
+    plan: free

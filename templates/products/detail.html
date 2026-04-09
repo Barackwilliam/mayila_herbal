@@ -1,0 +1,131 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block extra_css %}
+.product-detail { max-width:1100px; margin:0 auto; padding:80px 5%; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+.detail-images { position:sticky; top:80px; }
+.main-img { width:100%; border-radius:20px; aspect-ratio:1; object-fit:cover; margin-bottom:12px; box-shadow:0 10px 40px rgba(0,0,0,.1); }
+.thumb-row { display:flex; gap:10px; flex-wrap:wrap; }
+.thumb-img { width:70px; height:70px; border-radius:10px; object-fit:cover; cursor:pointer; opacity:.6; border:3px solid transparent; transition:var(--transition); }
+.thumb-img.active, .thumb-img:hover { opacity:1; border-color:var(--primary); }
+.detail-badge { display:inline-block; background:var(--secondary); color:var(--dark); padding:4px 14px; border-radius:20px; font-size:.8rem; font-weight:700; margin-bottom:16px; }
+.detail-name { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.5rem); font-weight:700; color:var(--dark); margin-bottom:12px; line-height:1.2; }
+.detail-desc { color:#666; line-height:1.7; margin-bottom:24px; }
+.detail-section { margin-bottom:24px; }
+.detail-section h3 { font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:1px; color:var(--primary); font-size:.9rem; margin-bottom:12px; }
+.benefit-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; color:#555; }
+.benefit-item i { color:var(--secondary); margin-top:2px; }
+.usage-box { background:var(--light); border-radius:12px; padding:20px; }
+.usage-box p { color:#555; line-height:1.7; white-space:pre-line; }
+.detail-actions { display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; }
+.detail-actions .btn { flex:1; min-width:160px; justify-content:center; }
+.breadcrumb { color:#999; font-size:.85rem; margin-bottom:40px; }
+.breadcrumb a { color:var(--primary); }
+
+.related-section { padding:80px 5%; background:var(--light); }
+.related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; max-width:1100px; margin:20px auto 0; }
+
+@media (max-width:768px) { .detail-grid { grid-template-columns:1fr; } .detail-images { position:static; } }
+{% endblock %}
+
+{% block content %}
+<div style="padding:20px 5% 0;">
+  <p class="breadcrumb"><a href="/">Home</a> / <a href="/products/">Products</a> / {{ product.name }}</p>
+</div>
+
+<div class="product-detail">
+  <div class="detail-grid">
+    <div class="detail-images fade-up">
+      {% if product.main_image %}
+      <img src="{{ product.main_image }}" alt="{{ product.name }}" class="main-img" id="mainImg">
+      {% endif %}
+      <div class="thumb-row">
+        {% if product.main_image %}<img src="{{ product.main_image }}" class="thumb-img active" onclick="switchImg(this,'{{ product.main_image }}/-/resize/800x/')">{% endif %}
+        {% if product.image2 %}<img src="{{ product.image2 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image2 }}')">{% endif %}
+        {% if product.image3 %}<img src="{{ product.image3 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image3 }}')">{% endif %}
+        {% if product.image4 %}<img src="{{ product.image4 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image4 }}')">{% endif %}
+      </div>
+    </div>
+    <div class="fade-up" style="transition-delay:.2s">
+      {% if product.badge %}<span class="detail-badge">{{ product.badge }}</span>{% endif %}
+      <h1 class="detail-name">{{ product.name }}</h1>
+      {% if product.volume %}<p style="color:var(--secondary);font-weight:700;font-size:1.1rem;margin-bottom:16px;">📦 {{ product.volume }}</p>{% endif %}
+      <p class="detail-desc">{{ product.short_desc }}</p>
+
+      {% if product.get_benefits_list %}
+      <div class="detail-section">
+        <h3><i class="fas fa-star" style="margin-right:6px;"></i>Benefits / Faida</h3>
+        {% for benefit in product.get_benefits_list %}
+        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>{{ benefit }}</span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if product.usage %}
+      <div class="detail-section">
+        <h3><i class="fas fa-clipboard-list" style="margin-right:6px;"></i>How To Use / Jinsi ya Kutumia</h3>
+        <div class="usage-box"><p>{{ product.usage }}</p></div>
+      </div>
+      {% endif %}
+
+      {% if product.description %}
+      <div class="detail-section">
+        <h3>Description</h3>
+        <p style="color:#666;line-height:1.7;">{{ product.description }}</p>
+      </div>
+      {% endif %}
+
+      {% if product.targets %}
+      <p style="background:var(--light);padding:12px 16px;border-radius:10px;font-size:.88rem;color:var(--primary);font-weight:600;margin-bottom:20px;">
+        🎯 Good for: {{ product.targets }}
+      </p>
+      {% endif %}
+
+      <div class="detail-actions">
+        <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ product.get_whatsapp_msg|urlencode }}"
+           target="_blank" class="btn btn-whatsapp">
+          <i class="fab fa-whatsapp"></i> Order on WhatsApp
+        </a>
+        <a href="tel:{{ site.phone1 }}" class="btn btn-outline">
+          <i class="fas fa-phone"></i> Call Us
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if related %}
+<section class="related-section">
+  <div class="section-header fade-up" style="max-width:1100px;margin:0 auto 40px;">
+    <span class="section-label">More Products</span>
+    <h2 class="section-title">You May Also Like</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="related-grid">
+    {% for p in related %}
+    <a href="/products/{{ p.slug }}/" style="display:block;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);transition:var(--transition);"
+       onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform=''">
+      {% if p.main_image %}
+      <img src="{{ p.main_image }}" alt="{{ p.name }}" style="width:100%;aspect-ratio:1;object-fit:cover;">
+      {% endif %}
+      <div style="padding:14px;">
+        <h3 style="font-family:'Oswald',sans-serif;font-size:1rem;color:var(--dark);margin-bottom:4px;">{{ p.name }}</h3>
+        <p style="font-size:.82rem;color:#999;">{{ p.short_desc|truncatewords:8 }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function switchImg(el, src) {
+  document.getElementById('mainImg').src = src;
+  document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+{% endblock %}
