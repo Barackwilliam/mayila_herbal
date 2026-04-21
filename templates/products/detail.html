@@ -5,10 +5,36 @@
 .product-detail { max-width:1100px; margin:0 auto; padding:80px 5%; }
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
 .detail-images { position:sticky; top:80px; }
-.main-img { width:100%; border-radius:20px; aspect-ratio:1; object-fit:cover; margin-bottom:12px; box-shadow:0 10px 40px rgba(0,0,0,.1); }
-.thumb-row { display:flex; gap:10px; flex-wrap:wrap; }
-.thumb-img { width:70px; height:70px; border-radius:10px; object-fit:cover; cursor:pointer; opacity:.6; border:3px solid transparent; transition:var(--transition); }
+
+/* ── IMAGE FIX: picha ionekane yote bila kufichwa ── */
+.main-img {
+  width: 100%;
+  border-radius: 20px;
+  aspect-ratio: 1;
+  object-fit: contain;      /* ← contain badala ya cover */
+  margin-bottom: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.1);
+  background: #ffffff;
+  padding: 12px;
+  box-sizing: border-box;
+}
+.thumb-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: contain;      /* ← contain hapa pia */
+  cursor: pointer;
+  opacity: .6;
+  border: 3px solid transparent;
+  transition: var(--transition);
+  background: #ffffff;
+  padding: 4px;
+  box-sizing: border-box;
+}
+/* ──────────────────────────────────────────────────── */
+
 .thumb-img.active, .thumb-img:hover { opacity:1; border-color:var(--primary); }
+.thumb-row { display:flex; gap:10px; flex-wrap:wrap; }
 .detail-badge { display:inline-block; background:var(--secondary); color:var(--dark); padding:4px 14px; border-radius:20px; font-size:.8rem; font-weight:700; margin-bottom:16px; }
 .detail-name { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.5rem); font-weight:700; color:var(--dark); margin-bottom:12px; line-height:1.2; }
 .detail-desc { color:#666; line-height:1.7; margin-bottom:24px; }
@@ -26,6 +52,17 @@
 .related-section { padding:80px 5%; background:var(--light); }
 .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; max-width:1100px; margin:20px auto 0; }
 
+/* Related product images — pia contain */
+.related-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+  display: block;
+}
+
 @media (max-width:768px) { .detail-grid { grid-template-columns:1fr; } .detail-images { position:static; } }
 {% endblock %}
 
@@ -41,7 +78,7 @@
       <img src="{{ product.main_image }}" alt="{{ product.name }}" class="main-img" id="mainImg">
       {% endif %}
       <div class="thumb-row">
-        {% if product.main_image %}<img src="{{ product.main_image }}" class="thumb-img active" onclick="switchImg(this,'{{ product.main_image }}/-/resize/800x/')">{% endif %}
+        {% if product.main_image %}<img src="{{ product.main_image }}" class="thumb-img active" onclick="switchImg(this,'{{ product.main_image }}')">{% endif %}
         {% if product.image2 %}<img src="{{ product.image2 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image2 }}')">{% endif %}
         {% if product.image3 %}<img src="{{ product.image3 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image3 }}')">{% endif %}
         {% if product.image4 %}<img src="{{ product.image4 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image4 }}')">{% endif %}
@@ -107,7 +144,7 @@
     <a href="/products/{{ p.slug }}/" style="display:block;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);transition:var(--transition);"
        onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform=''">
       {% if p.main_image %}
-      <img src="{{ p.main_image }}" alt="{{ p.name }}" style="width:100%;aspect-ratio:1;object-fit:cover;">
+      <img src="{{ p.main_image }}" alt="{{ p.name }}" class="related-img">
       {% endif %}
       <div style="padding:14px;">
         <h3 style="font-family:'Oswald',sans-serif;font-size:1rem;color:var(--dark);margin-bottom:4px;">{{ p.name }}</h3>
