@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+# Deployed in render using this email account botikawilly@gmail.com
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
