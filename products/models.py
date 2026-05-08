@@ -63,26 +63,6 @@ class Product(models.Model):
     def get_benefits_list(self):
         return [b.strip() for b in self.benefits.splitlines() if b.strip()]
 
-    # @property
-    # def images(self):
-    #     imgs = []
-    #     for url in [self.main_image, self.image2, self.image3, self.image4]:
-    #         if url:
-    #             imgs.append(url)
-    #     return imgs
-
-    # # Open Graph image (Facebook / WhatsApp preview)
-    # def get_og_image_url(self):
-    #     if self.main_image:
-    #         return f"https://ucarecdn.com/{self.main_image}/-/resize/1200x630/-/format/auto/"
-    #     return ""
-
-    # # Optimized image for normal website usage
-    # def get_image_url(self):
-    #     if self.main_image:
-    #         return f"https://ucarecdn.com/{self.main_image}/-/format/jpg/-/quality/smart/"
-    #     return ""
-
     @property
     def images(self):
         imgs = []

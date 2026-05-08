@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 from core import views
@@ -15,5 +15,7 @@ urlpatterns = [
     path('products/', views.products_list, name='products_list'),
     path('products/<slug:slug>/', views.product_detail, name='product_detail'),
     path('videos/', views.videos_list, name='videos_list'),
+    path('tinymce/', include('tinymce.urls')),  # ongeza hii
+
     path('api/video/<int:pk>/view/', views.increment_video_views, name='video_view'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

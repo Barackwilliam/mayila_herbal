@@ -15,10 +15,70 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tinymce',  # ongeza hapa
     'core',
     'products',
     'videos',
 ]
+
+
+# TinyMCE Configuration
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 400,
+    'menubar': 'file edit view insert format tools',
+    'plugins': [
+        'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
+        'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'table', 'paste', 'wordcount', 'help',
+    ],
+    'toolbar': (
+        'undo redo | formatselect | bold italic underline | '
+        'alignleft aligncenter alignright | '
+        'bullist numlist | removeformat | '
+        'pastetext | code fullscreen | help'
+    ),
+
+    # ✅ Hii ndiyo muhimu — inasafisha paste kutoka Word/PDF automatically
+    'paste_as_text': False,
+    'paste_word_valid_elements': 'p,b,strong,i,em,h1,h2,h3,ul,ol,li,br',
+    'paste_retain_style_properties': 'none',
+    'paste_remove_styles_if_hints': True,
+    'paste_strip_class_attributes': 'all',
+
+    'content_css': False,
+    'skin': 'oxide',
+    'content_style': '''
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            padding: 12px;
+        }
+        p { margin: 0 0 10px 0; }
+        ul, ol { padding-left: 20px; margin: 0 0 10px 0; }
+    ''',
+}
+
+# Kwa benefits field — editor ndogo bila formatting nyingi
+TINYMCE_BENEFITS_CONFIG = {
+    'height': 220,
+    'menubar': False,
+    'plugins': ['lists', 'paste'],
+    'toolbar': 'bullist numlist | removeformat | pastetext',
+    'paste_as_text': True,  # Benefits: paste as plain text tu
+    'forced_root_block': 'p',
+    'content_style': '''
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            padding: 12px;
+        }
+    ''',
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
