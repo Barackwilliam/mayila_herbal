@@ -11,7 +11,7 @@
   width: 100%;
   border-radius: 20px;
   aspect-ratio: 1;
-  object-fit: contain;      /* ← contain badala ya cover */
+  object-fit: contain;
   margin-bottom: 12px;
   box-shadow: 0 10px 40px rgba(0,0,0,.1);
   background: #ffffff;
@@ -22,7 +22,7 @@
   width: 70px;
   height: 70px;
   border-radius: 10px;
-  object-fit: contain;      /* ← contain hapa pia */
+  object-fit: contain;
   cursor: pointer;
   opacity: .6;
   border: 3px solid transparent;
@@ -63,6 +63,11 @@
   display: block;
 }
 
+/* TinyMCE rendered content styling */
+.tinymce-content p { color:#555; line-height:1.7; margin-bottom:10px; }
+.tinymce-content ul, .tinymce-content ol { padding-left:20px; margin-bottom:10px; color:#555; line-height:1.8; }
+.tinymce-content strong { color:var(--dark); }
+
 @media (max-width:768px) { .detail-grid { grid-template-columns:1fr; } .detail-images { position:static; } }
 {% endblock %}
 
@@ -73,6 +78,8 @@
 
 <div class="product-detail">
   <div class="detail-grid">
+
+    <!-- ── LEFT: Images ── -->
     <div class="detail-images fade-up">
       {% if product.main_image %}
       <img src="{{ product.main_image }}" alt="{{ product.name }}" class="main-img" id="mainImg">
@@ -84,41 +91,59 @@
         {% if product.image4 %}<img src="{{ product.image4 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image4 }}')">{% endif %}
       </div>
     </div>
+
+    <!-- ── RIGHT: Info ── -->
     <div class="fade-up" style="transition-delay:.2s">
       {% if product.badge %}<span class="detail-badge">{{ product.badge }}</span>{% endif %}
       <h1 class="detail-name">{{ product.name }}</h1>
       {% if product.volume %}<p style="color:var(--secondary);font-weight:700;font-size:1.1rem;margin-bottom:16px;">📦 {{ product.volume }}</p>{% endif %}
       <p class="detail-desc">{{ product.short_desc }}</p>
 
+      <!-- Benefits -->
       {% if product.get_benefits_list %}
       <div class="detail-section">
         <h3><i class="fas fa-star" style="margin-right:6px;"></i>Benefits / Faida</h3>
         {% for benefit in product.get_benefits_list %}
-        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>{{ benefit }}</span></div>
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i>
+          <span class="tinymce-content">{{ benefit|safe }}</span>
+        </div>
         {% endfor %}
       </div>
       {% endif %}
 
+      <!-- How To Use -->
       {% if product.usage %}
       <div class="detail-section">
         <h3><i class="fas fa-clipboard-list" style="margin-right:6px;"></i>How To Use / Jinsi ya Kutumia</h3>
-        <div class="usage-box"><p>{{ product.usage }}</p></div>
+        <div class="usage-box tinymce-content">{{ product.usage|safe }}</div>
       </div>
       {% endif %}
 
+      <!-- Description -->
       {% if product.description %}
       <div class="detail-section">
         <h3>Description</h3>
-        <p style="color:#666;line-height:1.7;">{{ product.description }}</p>
+        <div class="tinymce-content" style="color:#666;line-height:1.7;">{{ product.description|safe }}</div>
       </div>
       {% endif %}
 
+      <!-- Ingredients -->
+      {% if product.ingredients %}
+      <div class="detail-section">
+        <h3><i class="fas fa-leaf" style="margin-right:6px;"></i>Ingredients / Viungo</h3>
+        <div class="tinymce-content" style="color:#666;line-height:1.7;">{{ product.ingredients|safe }}</div>
+      </div>
+      {% endif %}
+
+      <!-- Targets -->
       {% if product.targets %}
       <p style="background:var(--light);padding:12px 16px;border-radius:10px;font-size:.88rem;color:var(--primary);font-weight:600;margin-bottom:20px;">
         🎯 Good for: {{ product.targets }}
       </p>
       {% endif %}
 
+      <!-- Actions -->
       <div class="detail-actions">
         <a href="https://wa.me/{{ site.whatsapp_number|cut:'+' }}?text={{ product.get_whatsapp_msg|urlencode }}"
            target="_blank" class="btn btn-whatsapp">
@@ -132,6 +157,7 @@
   </div>
 </div>
 
+<!-- Related Products -->
 {% if related %}
 <section class="related-section">
   <div class="section-header fade-up" style="max-width:1100px;margin:0 auto 40px;">
