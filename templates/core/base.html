@@ -41,19 +41,18 @@
   {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "{{ site.site_name }}",
-    "description": "{{ site.meta_description }}",
+    "name": "{{ site.site_name|escapejs }}",
+    "description": "{{ site.meta_description|escapejs }}",
     "url": "{{ request.scheme }}://{{ request.get_host }}",
     "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization",
-    "telephone": "{{ site.phone1 }}",
-    "email": "{{ site.email }}",
+    "telephone": "{{ site.phone1|escapejs }}",
+    "email": "{{ site.email|escapejs }}",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Mbalizi",
       "addressRegion": "Mbeya",
       "addressCountry": "TZ"
-    },
-    {% if site.facebook_url %}"sameAs": ["{{ site.facebook_url }}"{% if site.instagram_url %}, "{{ site.instagram_url }}"{% endif %}{% if site.tiktok_url %}, "{{ site.tiktok_url }}"{% endif %}]{% endif %}
+    }
   }
   </script>
 
