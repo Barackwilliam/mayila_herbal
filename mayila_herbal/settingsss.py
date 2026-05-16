@@ -15,7 +15,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
     'tinymce',  # ongeza hapa
     'core',
     'products',
@@ -150,9 +149,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# URL kamili ya website (inatumika kwenye SEO/sitemap)
-SITE_URL = config('SITE_URL', default='https://mayilaherbalclinic.com')
 
 UPLOADCARE = {
     'pub_key': config('UPLOADCARE_PUBLIC_KEY', default='4c3ba9de492e0e0eaddc'),

@@ -3,61 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-  <!-- ══ SEO: Title & Description ══ -->
   <title>{% block title %}{{ site.site_name }}{% endblock %} — {{ site.tagline }}</title>
-  <meta name="description" content="{% block meta_description %}{{ site.meta_description }}{% endblock %}">
-  <meta name="keywords" content="{% block meta_keywords %}{{ site.meta_keywords }}{% endblock %}">
-  <meta name="robots" content="index, follow">
-
-  <!-- ══ Canonical URL (inazuia duplicate content) ══ -->
-  <link rel="canonical" href="{{ request.build_absolute_uri }}">
-
-  <!-- ══ Open Graph (Facebook, WhatsApp, LinkedIn preview) ══ -->
-  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-  <meta property="og:title" content="{% block og_title %}{{ site.site_name }} — {{ site.tagline }}{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}{{ site.meta_description }}{% endblock %}">
-  <meta property="og:url" content="{{ request.build_absolute_uri }}">
-  <meta property="og:site_name" content="{{ site.site_name }}">
-  <meta property="og:image" content="{% block og_image %}{{ site.get_og_image_url }}{% endblock %}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:locale" content="sw_TZ">
-
-  <!-- ══ Twitter / X Card ══ -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{% block twitter_title %}{{ site.site_name }}{% endblock %}">
-  <meta name="twitter:description" content="{% block twitter_description %}{{ site.meta_description }}{% endblock %}">
-  <meta name="twitter:image" content="{% block twitter_image %}{{ site.get_og_image_url }}{% endblock %}">
-
-  <!-- ══ Favicon ══ -->
-  {% if site.favicon %}
-  <link rel="icon" type="image/x-icon" href="{{ site.get_favicon_url }}">
-  <link rel="apple-touch-icon" href="{{ site.get_favicon_url }}">
-  {% endif %}
-
-  <!-- ══ Structured Data: Organization (global — kwenye kila ukurasa) ══ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "{{ site.site_name }}",
-    "description": "{{ site.meta_description }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}",
-    "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization",
-    "telephone": "{{ site.phone1 }}",
-    "email": "{{ site.email }}",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Mbalizi",
-      "addressRegion": "Mbeya",
-      "addressCountry": "TZ"
-    },
-    {% if site.facebook_url %}"sameAs": ["{{ site.facebook_url }}"{% if site.instagram_url %}, "{{ site.instagram_url }}"{% endif %}{% if site.tiktok_url %}, "{{ site.tiktok_url }}"{% endif %}]{% endif %}
-  }
-  </script>
-
-  {% block extra_structured_data %}{% endblock %}
+  <meta name="description" content="{{ site.meta_description }}">
+  <meta name="keywords" content="{{ site.meta_keywords }}">
+  <meta property="og:title" content="{{ site.site_name }}">
+  <meta property="og:description" content="{{ site.meta_description }}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

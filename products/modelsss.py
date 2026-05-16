@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 
 
 class ProductCategory(models.Model):
@@ -75,28 +74,4 @@ class Product(models.Model):
     def get_image_url(self):
         if self.main_image:
             return f"https://ucarecdn.com/{self.main_image}/-/format/jpg/-/quality/smart/"
-        return ""
-
-    def get_absolute_url(self):
-        return reverse('product_detail', kwargs={'slug': self.slug})
-
-    def get_whatsapp_msg(self):
-        if self.whatsapp_message:
-            return self.whatsapp_message
-        return f"Hello! I am interested in {self.name}."
-
-    def get_meta_description(self):
-        """SEO description kwa kila bidhaa — inakwenda kwenye Google snippet."""
-        if self.short_desc:
-            return self.short_desc
-        if self.description:
-            import re
-            clean = re.sub(r'<[^>]+>', '', self.description)
-            return clean[:160].strip()
-        return f"{self.name} — Natural herbal product from Mayila Herbal Clinic, Mbeya Tanzania."
-
-    def get_og_image_url(self):
-        """Open Graph image URL (1200x630) kwa social sharing."""
-        if self.main_image:
-            return f"https://ucarecdn.com/{self.main_image}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
         return ""
