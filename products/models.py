@@ -52,6 +52,7 @@ class Product(models.Model):
     updated_at      = models.DateTimeField(auto_now=True)
 
     whatsapp_message = models.CharField(max_length=300, blank=True, help_text='Custom WhatsApp message for this product. Leave blank for default.')
+    price           = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True, help_text='Bei ya bidhaa kwa TZS (optional — inaonekana kwenye Google rich results)')
 
     class Meta:
         ordering = ['order', 'name']
@@ -73,9 +74,12 @@ class Product(models.Model):
         return imgs
 
     def get_image_url(self):
-        if self.main_image:
-            return f"https://ucarecdn.com/{self.main_image}/-/format/jpg/-/quality/smart/"
-        return ""
+        if not self.main_image:
+            return ""
+        base = self.main_image.rstrip('/')
+        if base.startswith('http'):
+            return f"{base}/-/format/jpg/-/quality/smart/"
+        return f"https://ucarecdn.com/{base}/-/format/jpg/-/quality/smart/"
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
@@ -97,6 +101,13 @@ class Product(models.Model):
 
     def get_og_image_url(self):
         """Open Graph image URL (1200x630) kwa social sharing."""
-        if self.main_image:
-            return f"https://ucarecdn.com/{self.main_image}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
-        return ""
+        if not self.main_image:
+            return ""
+        # main_image inaweza kuwa full URL au UUID tu
+        base = self.main_image.rstrip('/')
+        if base.startswith('http'):
+            # Full URL tayari — ongeza transformations tu
+            return f"{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
+        else:
+            # UUID tu — ongeza ucarecdn.com prefix
+            return f"https://ucarecdn.com/{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"

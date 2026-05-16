@@ -42,10 +42,12 @@
     "@type": "Offer",
     "availability": "https://schema.org/InStock",
     "priceCurrency": "TZS",
+    {% if product.price %}"price": "{{ product.price }}",{% endif %}
+    "url": "{{ request.build_absolute_uri }}",
     "seller": {
       "@type": "Organization",
-      "name": "{{ site.site_name }}",
-      "telephone": "{{ site.phone1 }}",
+      "name": "{{ site.site_name|escapejs }}",
+      "telephone": "{{ site.phone1|escapejs }}",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Mbalizi",
