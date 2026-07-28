@@ -81,6 +81,11 @@ TINYMCE_BENEFITS_CONFIG = {
 }
 
 
+JAMIITEK_API_KEY = "miauCmWuJeSi-ae9JjzX8NO9bgkeJLwrV-N8Zor40hm_641eR42wLk247hH2KH-W"
+JAMIITEK_API_URL = "https://jamiitek.com/api/site-status/"
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -90,6 +95,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'jamiitek_middleware.JamiiTekStatusMiddleware', 
+
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
