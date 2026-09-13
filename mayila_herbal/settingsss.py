@@ -121,7 +121,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres.aenenssvaruafzprapsp',
         'PASSWORD': 'NyumbaChap@123',
-        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
+        'HOST': 'aws-0-eu-central-1.pooler.supabase.com',
         'PORT': config('DB_PORT', default='5432'),
         'OPTIONS': {
             'sslmode': config('DB_SSLMODE', default='require'),
