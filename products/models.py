@@ -73,18 +73,47 @@ class Product(models.Model):
                 imgs.append(url)
         return imgs
 
-    def get_image_url(self):
-        if not self.main_image:
+    @staticmethod
+    def _transform_image_url(value, resize=None):
+        """
+        Returns a compressed, web-ready URL for a stored image value.
+        Handles three cases seen in this DB:
+          - Supabase Storage public URL       -> returned as-is (already final)
+          - Full Uploadcare CDN URL            -> ucarecdn.com OR a branded
+            custom domain like xxxxx.ucarecd.net — Uploadcare's transform
+            syntax works on both, so we just append it
+          - Bare Uploadcare UUID (legacy)      -> ucarecdn.com prefix + transform
+        """
+        if not value:
             return ""
-        base = self.main_image.rstrip('/')
-        if 'ucarecdn.com' in base:
-            # Legacy Uploadcare value — still apply its transform syntax
-            return f"{base}/-/format/jpg/-/quality/smart/"
+        base = value.rstrip('/')
+        if '/storage/v1/object/public/' in base:
+            return base  # Supabase — no on-the-fly transform API, already final
         if not base.startswith('http'):
-            # Bare Uploadcare UUID left over from before migration
-            return f"https://ucarecdn.com/{base}/-/format/jpg/-/quality/smart/"
-        # Supabase Storage public URL — already a complete, ready-to-use link
-        return base
+            base = f"https://ucarecdn.com/{base}"
+        suffix = f"/-/resize/{resize}/-/format/jpg/-/quality/smart/" if resize \
+            else "/-/format/jpg/-/quality/smart/"
+        return f"{base}{suffix}"
+
+    def get_image_url(self):
+        return self._transform_image_url(self.main_image)
+
+    def get_image2_url(self):
+        return self._transform_image_url(self.image2)
+
+    def get_image3_url(self):
+        return self._transform_image_url(self.image3)
+
+    def get_image4_url(self):
+        return self._transform_image_url(self.image4)
+
+    @property
+    def display_images(self):
+        """All non-empty images, already compressed — use this in templates/JS galleries."""
+        return [u for u in [
+            self.get_image_url(), self.get_image2_url(),
+            self.get_image3_url(), self.get_image4_url(),
+        ] if u]
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
@@ -106,12 +135,4 @@ class Product(models.Model):
 
     def get_og_image_url(self):
         """Open Graph image URL (1200x630) kwa social sharing."""
-        if not self.main_image:
-            return ""
-        base = self.main_image.rstrip('/')
-        if 'ucarecdn.com' in base:
-            return f"{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
-        if not base.startswith('http'):
-            return f"https://ucarecdn.com/{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
-        # Supabase Storage public URL — no on-the-fly resize API, use as-is
-        return base
+        return self._transform_image_url(self.main_image, resize='1200x630')

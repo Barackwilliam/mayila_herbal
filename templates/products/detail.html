@@ -169,13 +169,13 @@
     <!-- ── LEFT: Images ── -->
     <div class="detail-images fade-up">
       {% if product.main_image %}
-      <img src="{{ product.main_image }}" alt="{{ product.name }}" class="main-img" id="mainImg">
+      <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="main-img" id="mainImg">
       {% endif %}
       <div class="thumb-row">
-        {% if product.main_image %}<img src="{{ product.main_image }}" class="thumb-img active" onclick="switchImg(this,'{{ product.main_image }}')">{% endif %}
-        {% if product.image2 %}<img src="{{ product.image2 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image2 }}')">{% endif %}
-        {% if product.image3 %}<img src="{{ product.image3 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image3 }}')">{% endif %}
-        {% if product.image4 %}<img src="{{ product.image4 }}" class="thumb-img" onclick="switchImg(this,'{{ product.image4 }}')">{% endif %}
+        {% if product.main_image %}<img src="{{ product.get_image_url }}" class="thumb-img active" onclick="switchImg(this,'{{ product.get_image_url }}')">{% endif %}
+        {% if product.image2 %}<img src="{{ product.get_image2_url }}" class="thumb-img" onclick="switchImg(this,'{{ product.get_image2_url }}')">{% endif %}
+        {% if product.image3 %}<img src="{{ product.get_image3_url }}" class="thumb-img" onclick="switchImg(this,'{{ product.get_image3_url }}')">{% endif %}
+        {% if product.image4 %}<img src="{{ product.get_image4_url }}" class="thumb-img" onclick="switchImg(this,'{{ product.get_image4_url }}')">{% endif %}
       </div>
     </div>
 
@@ -257,7 +257,7 @@
     <a href="/products/{{ p.slug }}/" style="display:block;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);transition:var(--transition);"
        onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform=''">
       {% if p.main_image %}
-      <img src="{{ p.main_image }}" alt="{{ p.name }}" class="related-img">
+      <img src="{{ p.get_image_url }}" alt="{{ p.name }}" class="related-img" loading="lazy" width="300" height="300">
       {% endif %}
       <div style="padding:14px;">
         <h3 style="font-family:'Oswald',sans-serif;font-size:1rem;color:var(--dark);margin-bottom:4px;">{{ p.name }}</h3>

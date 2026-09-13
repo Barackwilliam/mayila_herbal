@@ -577,7 +577,7 @@
         {% for product in featured_products %}
         {% if product.main_image %}
         <div class="hero-slide {% if forloop.first %}active{% endif %}"
-             style="background-image:url('{{ product.main_image }}')">
+             style="background-image:url('{{ product.get_og_image_url }}')">
         </div>
         {% endif %}
         {% empty %}
@@ -648,7 +648,7 @@
          onclick="openProductModal('{{ product.slug }}')">
       <div class="product-image">
         {% if product.main_image %}
-        <img src="{{ product.main_image }}" alt="{{ product.name }}" loading="lazy">
+        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" loading="lazy" width="400" height="400">
         {% else %}
         <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
           <i class="fas fa-leaf" style="font-size:4rem;color:var(--primary);opacity:.3;"></i>
@@ -921,12 +921,12 @@ const productData = {
     usage: `{{ product.usage|escapejs }}`,
     volume: '{{ product.volume|escapejs }}',
     targets: '{{ product.targets|escapejs }}',
-    mainImg: '{% if product.main_image %}{{ product.main_image }}{% endif %}',
+    mainImg: '{% if product.main_image %}{{ product.get_image_url }}{% endif %}',
     imgs: [
-      {% if product.main_image %}'{{ product.main_image }}'{% endif %}
-      {% if product.image2 %},'{{ product.image2 }}'{% endif %}
-      {% if product.image3 %},'{{ product.image3 }}'{% endif %}
-      {% if product.image4 %},'{{ product.image4 }}'{% endif %}
+      {% if product.main_image %}'{{ product.get_image_url }}'{% endif %}
+      {% if product.image2 %},'{{ product.get_image2_url }}'{% endif %}
+      {% if product.image3 %},'{{ product.get_image3_url }}'{% endif %}
+      {% if product.image4 %},'{{ product.get_image4_url }}'{% endif %}
     ],
     whatsapp: '{{ site.whatsapp_number|cut:"+" }}',
     waMsg: '{{ product.get_whatsapp_msg|default:site.whatsapp_message|urlencode }}',

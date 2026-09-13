@@ -71,17 +71,26 @@ def is_supabase_url(value):
 def download_uploadcare(value):
     """
     Downloads an image previously stored via Uploadcare. `value` may be a
-    bare UUID or a full ucarecdn.com URL (both forms exist in the DB).
-    Returns (bytes, content_type), or (None, None) if it can't be fetched.
+    bare UUID or a full CDN URL (ucarecdn.com or a custom branded domain
+    like xxxxx.ucarecd.net both work the same way).
+    Returns (bytes, content_type, error). `error` is None on success, or
+    the exception message on failure.
     """
     if not value:
-        return None, None
+        return None, None, "empty value"
     base = value.rstrip('/')
     if not base.startswith('http'):
         base = f"https://ucarecdn.com/{base}"
+    headers = {
+        'User-Agent': (
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+            '(KHTML, like Gecko) Chrome/120.0 Safari/537.36'
+        ),
+        'Accept': 'image/*,*/*;q=0.8',
+    }
     try:
-        resp = requests.get(base, timeout=20)
+        resp = requests.get(base, timeout=20, headers=headers, allow_redirects=True)
         resp.raise_for_status()
-        return resp.content, resp.headers.get('Content-Type', 'image/jpeg')
-    except requests.RequestException:
-        return None, None
+        return resp.content, resp.headers.get('Content-Type', 'image/jpeg'), None
+    except requests.RequestException as e:
+        return None, None, str(e)

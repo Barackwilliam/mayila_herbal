@@ -98,7 +98,7 @@
       <a href="{% url 'product_detail' product.slug %}">
         <div class="product-image">
           {% if product.main_image %}
-          <img src="{{ product.main_image }}" alt="{{ product.name }}" loading="lazy">
+          <img src="{{ product.get_image_url }}" alt="{{ product.name }}" loading="lazy" width="400" height="400">
           {% else %}
           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
             <i class="fas fa-leaf" style="font-size:4rem;color:var(--primary);opacity:.3;"></i>

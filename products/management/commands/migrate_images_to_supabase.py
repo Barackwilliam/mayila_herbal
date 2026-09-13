@@ -45,10 +45,10 @@ class Command(BaseCommand):
                     skipped += 1
                     continue
 
-                data, content_type = download_uploadcare(value)
+                data, content_type, error = download_uploadcare(value)
                 if not data:
                     self.stderr.write(self.style.WARNING(
-                        f"  ✗ {product.name} / {field}: could not download {value}"
+                        f"  ✗ {product.name} / {field}: could not download {value} ({error})"
                     ))
                     failed += 1
                     continue
