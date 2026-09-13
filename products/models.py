@@ -77,9 +77,14 @@ class Product(models.Model):
         if not self.main_image:
             return ""
         base = self.main_image.rstrip('/')
-        if base.startswith('http'):
+        if 'ucarecdn.com' in base:
+            # Legacy Uploadcare value — still apply its transform syntax
             return f"{base}/-/format/jpg/-/quality/smart/"
-        return f"https://ucarecdn.com/{base}/-/format/jpg/-/quality/smart/"
+        if not base.startswith('http'):
+            # Bare Uploadcare UUID left over from before migration
+            return f"https://ucarecdn.com/{base}/-/format/jpg/-/quality/smart/"
+        # Supabase Storage public URL — already a complete, ready-to-use link
+        return base
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
@@ -103,11 +108,10 @@ class Product(models.Model):
         """Open Graph image URL (1200x630) kwa social sharing."""
         if not self.main_image:
             return ""
-        # main_image inaweza kuwa full URL au UUID tu
         base = self.main_image.rstrip('/')
-        if base.startswith('http'):
-            # Full URL tayari — ongeza transformations tu
+        if 'ucarecdn.com' in base:
             return f"{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
-        else:
-            # UUID tu — ongeza ucarecdn.com prefix
+        if not base.startswith('http'):
             return f"https://ucarecdn.com/{base}/-/resize/1200x630/-/format/jpg/-/quality/smart/"
+        # Supabase Storage public URL — no on-the-fly resize API, use as-is
+        return base

@@ -126,10 +126,10 @@ WSGI_APPLICATION = 'mayila_herbal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.gkzotofslqdfoqagobkh',
-        'PASSWORD': 'NyumbaChap@123',
-        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT', default='5432'),
         'OPTIONS': {
             'sslmode': config('DB_SSLMODE', default='require'),
@@ -165,3 +165,10 @@ UPLOADCARE = {
     'pub_key': config('UPLOADCARE_PUBLIC_KEY', default='4c3ba9de492e0e0eaddc'),
     'secret': config('UPLOADCARE_SECRET_KEY', default='28410d13b3cb1098451e'),
 }
+
+# Supabase Storage — bucket used for product images (S3-compatible protocol)
+SUPABASE_URL = config('SUPABASE_URL')
+SUPABASE_S3_ACCESS_KEY_ID = config('SUPABASE_S3_ACCESS_KEY_ID')
+SUPABASE_S3_SECRET_ACCESS_KEY = config('SUPABASE_S3_SECRET_ACCESS_KEY')
+SUPABASE_S3_REGION = config('SUPABASE_S3_REGION', default='eu-central-1')
+SUPABASE_STORAGE_BUCKET = config('SUPABASE_STORAGE_BUCKET', default='product-images')
